@@ -12,7 +12,7 @@ typedef struct dados{
 	int 	idade;
 	char 	genero;
 	char 	orientacao;
-	char 	relacionamento;
+	char 	namorando;
 } Dados;
 
 /*

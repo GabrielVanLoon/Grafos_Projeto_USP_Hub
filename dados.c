@@ -12,7 +12,7 @@ int dad_escreverDados (Dados* dados){
 	fwrite(&dados->idade, sizeof(int), 1, fp);
 	fwrite(&dados->genero, sizeof(char), 1, fp);
 	fwrite(&dados->orientacao, sizeof(char), 1, fp);
-	fwrite(&dados->relacionamento, sizeof(char), 1, fp);
+	fwrite(&dados->namorando, sizeof(char), 1, fp);
 	fclose(fp);
 	return 0;
 }
@@ -26,7 +26,7 @@ int dad_buscaDados (Dados* dados, int id){
 	fread(&dados->idade, sizeof(int), 1, fp);
 	fread(&dados->genero, sizeof(char), 1, fp);
 	fread(&dados->orientacao, sizeof(char), 1, fp);
-	fread(&dados->relacionamento, sizeof(char), 1, fp);
+	fread(&dados->namorando, sizeof(char), 1, fp);
 	fclose(fp);
 	return 0;
 }

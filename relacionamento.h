@@ -1,5 +1,7 @@
 #ifndef RELACIONAMENTO_H
 #define RELACIONAAMENTO_H
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct no {
 	int		id;
@@ -11,6 +13,7 @@ typedef struct relacionamento {
 	int 				nroRelacionamento;
 } Relacionamento;
 
+/* Inicializa relacionamentos com pontuacao zero*/
 int rel_novaUsuario();
 
 int rel_escreveRelacionamento(Relacionamento* rel);
