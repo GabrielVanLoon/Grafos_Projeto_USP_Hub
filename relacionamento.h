@@ -14,12 +14,12 @@ typedef struct relacionamento {
 } Relacionamento;
 
 /* Inicializa relacionamentos com pontuacao zero*/
-int rel_novaUsuario();
+int rel_novoUsuario();
 
-int rel_escreveRelacionamento(Relacionamento* rel);
+int rel_escreverRelacionamento(Relacionamento* rel, int id);
 
 int rel_lerRelacionamento(Relacionamento* rel);
 
-int rel_atualizaRelacionamento(Relacionamento* rel);
+
 
 #endif
