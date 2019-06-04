@@ -1,10 +1,13 @@
-#ifndef USUARIOS_H
-    #define USUARIOS_H
-
+#ifndef USUARIOS_H 
+    #define USUARIOS_H 10
+    
     /**
-     * Definindo o arquivo de usuarios
+     * USUARIOS.BIN
+     * 
+     * O arquivo usuarios.bin servirá com um arquivo de indice primário.
+     * Seu objetivo é carregar na memória um array com todos os usuários cadastrados no
+     * sistema. Para isso ele salva a relação [id,login] de cada usuário.
      */
-    const char arquivoUsuarios[60] = "binarios/usuarios.bin";
 
     /**
      * Struct de cabeçalho do UsuariosHeader.h

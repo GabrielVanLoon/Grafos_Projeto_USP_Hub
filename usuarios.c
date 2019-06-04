@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * Definindo o arquivo de usuarios
+ */
+const char arquivoUsuarios[60] = "binarios/usuarios.bin";
+
 int usr_carregarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
     if(usersHeaders == NULL || users == NULL)
         return 1;
