@@ -5,7 +5,8 @@ const int tamanhoDados = 71;
 
 int dad_escreverDados (Dados* dados){
 	FILE* fp = fopen(arquivoDados, "rb+");
-	if (fp == NULL) return 1;
+	if (fp == NULL)
+		fp = fopen(arquivoDados, "wb+");
 	fseek(fp, 0, SEEK_END);
 	fwrite(&dados->id, sizeof(int), 1, fp);
 	fwrite(dados->nome, sizeof(char), 60, fp);
