@@ -36,4 +36,6 @@
 
     int usr_buscarUsuario(UsuariosHeader* usersHeaders, Usuario** users, char* login);
 
+    void usr_listarUsuarios(UsuariosHeader* usersHeaders, Usuario** users);
+
 #endif 

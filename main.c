@@ -40,6 +40,8 @@ int main(void){
 
     // Realiza as configurações do programa
     usr_carregarUsuarios(&glob_usuariosHeader, &glob_usuarios);
+    // usr_listarUsuarios(&glob_usuariosHeader, &glob_usuarios);
+    // getchar();
 
     // Realiza o controle das telas
     while(telaAtual != SAIR_PROGRAMA){
@@ -54,6 +56,7 @@ int main(void){
     }
 
     // Realiza o free dos dados e reescreve o indice da memória para o disco
+     usr_descarregarUsuarios(&glob_usuariosHeader, &glob_usuarios);
 
     return 0;
 }
@@ -102,12 +105,12 @@ int main(void){
     int carregarFormularioCadastro(){
         Usuario novoUsuario;
         Dados   dados;
-        memset(&dados, 0, sizeof(Dados));
+        memset(&dados,       0, sizeof(Dados));
         memset(&novoUsuario, 0,      sizeof(Usuario));
 
         // Definindo o ID que irá ser cadastrado
-        dados.id = glob_usuariosHeader.qtdUsuarios;
-        novoUsuario.id      = glob_usuariosHeader.qtdUsuarios;
+        dados.id            = glob_usuariosHeader.qtdUsuarios + 1;
+        novoUsuario.id      = glob_usuariosHeader.qtdUsuarios + 1;
 
         // Faz o usuário preencher os dados
         system("clear");
@@ -165,6 +168,9 @@ int main(void){
         printf("\n\tUsuario '%s' cadastrado com sucesso!\n", novoUsuario.login);
         printf("\tpressione ENTER para voltar...\n");
         getchar();
+
+        usr_inserirNovoUsuario(&glob_usuariosHeader, &glob_usuarios, &novoUsuario);
+        // dad_escreverDados(&dados);
 
         return TELA_LOGIN;
     }

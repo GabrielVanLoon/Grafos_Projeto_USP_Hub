@@ -93,3 +93,12 @@ int usr_buscarUsuario(UsuariosHeader* usersHeaders, Usuario** users, char* login
 
     return -1;
 }
+
+void usr_listarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
+    if(usersHeaders == NULL || users == NULL)
+        return;
+
+    for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
+        printf("\t[%d], [%s]\n", (*users)[i].id, (*users)[i].login);
+    }
+}
