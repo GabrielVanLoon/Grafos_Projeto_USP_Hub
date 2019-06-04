@@ -1,11 +1,22 @@
 #ifndef RELACIONAMENTO_H
 #define RELACIONAAMENTO_H
 
-typedef struct _relacionamento {
-	
-	int		id,
-			pontos;
+typedef struct no {
+	int		id;
+	int		pontos; //pontos de afinidade.
+} NoRelacionamento;
 
-}Relacionamento;
+typedef struct relacionamento {
+	NoRelacionamento 	amizades[100];
+	int 				nroRelacionamento;
+} Relacionamento;
+
+int rel_novaUsuario();
+
+int rel_escreveRelacionamento(Relacionamento* rel);
+
+int rel_lerRelacionamento(Relacionamento* rel);
+
+int rel_atualizaRelacionamento(Relacionamento* rel);
 
 #endif

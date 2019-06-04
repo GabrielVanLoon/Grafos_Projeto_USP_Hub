@@ -1,12 +1,7 @@
 #ifndef DADOS_H
 #define DADOS_H
 #include <stdlib.h>
-
-/**
-*	
-**/
-const char arquivoDados[] = "binarios/dados.bin";
-const int tamanhoDados = 71;
+#include <stdio.h>
 
 /*
 	Modelo para escrever no arquivo. 
