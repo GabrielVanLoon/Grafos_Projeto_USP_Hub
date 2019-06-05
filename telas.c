@@ -44,9 +44,12 @@
         char opcao = 0;
 
         // Carregando as variáveis que serão manipuladas à nivel de dashboard
-        Relacionamento dsh_amigosUsuario; 
+        // Relacionamento dsh_amigosUsuario;
+        // Dados          dsh_dadosAmigosUsuario;            
+        // Solicitacoes   dsh_solicitacoesPendentes;    
+        // ?????          dsh_pontosAfinidade;
 
-        // Mostra as solicitações de amizade pendentes
+        // Mostra as solicitações de amizade pendentes caso existam
 
         // Exibe as principais opções do painel
         while(opcao != '0'){
@@ -68,13 +71,28 @@
 
             if(opcao == '1'){
 
-            } 
-
+            }
         }
 
         // Desaloca da memórias as variáveis à nível de dashboard
             
         return TELA_LOGIN; // todo
+    }
+
+    int carregarTelaSolicitacoesPendentes(){
+        return TELA_DASHBOARD;
+    }
+
+    int carregarTelaListarAmigos(){
+        return TELA_DASHBOARD;
+    }
+
+    int carregarTelaSugestoesAmizades(){
+        return TELA_DASHBOARD;
+    }
+
+    int carregarTelaParceiroIdeal(){
+        return TELA_DASHBOARD;
     }
 
 /** FORMULÁRIOS DO SISTEMA
@@ -180,4 +198,14 @@
         getchar();
         
         return TELA_LOGIN;
+    }
+
+    int carregarFormularioAdicionarAmigo(){
+        // TODO
+        return TELA_DASHBOARD;
+    }
+
+    int carregarFormularioRemoverAmigo(){
+        // TODO
+        return TELA_DASHBOARD;
     }

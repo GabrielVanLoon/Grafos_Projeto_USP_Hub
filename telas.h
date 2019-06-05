@@ -6,7 +6,6 @@
      */
     #include "usuarios.h"
     #include "dados.h"
-    #include "relacionamento.h"
 
     /**
      * MAPEAMENTO DAS TELAS
@@ -28,11 +27,35 @@
          */
         int carregarTelaDashboard(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user);
 
+        /**
+         * Exibe todas as solicitações pendentes do usuário. Sendo ele obrigado à aceitar ou recusar elas.
+         */
+        int carregarTelaSolicitacoesPendentes();
+
+        /**
+         * Exibe todos os amigos do usuario logado.
+         */
+        int carregarTelaListarAmigos();
+
+        /**
+         * Exibe a tela sugerindo as 20 pessoas com maior pontuação de afinidade.
+         */
+        int carregarTelaSugestoesAmizades();
+
+        /**
+         * Exibe a pessoa com maior ponto de afinidade e que não está comprometida.
+         */
+        int carregarTelaParceiroIdeal();
+
     /**
      * FORMULÁRIOS E OUTRAS INTERAÇÕES
      */
         int carregarFormularioCadastro(UsuariosHeader* usersHeaders, Usuario** users);
         
         int carregarFormularioLogin(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user);
+
+        int carregarFormularioAdicionarAmigo();
+
+        int carregarFormularioRemoverAmigo();
 
 #endif
