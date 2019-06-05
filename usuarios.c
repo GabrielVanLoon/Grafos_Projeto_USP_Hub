@@ -15,34 +15,33 @@ int usr_carregarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
     // Primeira faz a abertura do arquivo, caso ele não exista retorna uma lista
     // de usuarios vazia e o cabeçalho com tamanho 0.
     FILE* fp = fopen(arquivoUsuarios, "r+b");
+    (*users) = NULL;
+    usersHeaders->qtdUsuarios = 0;
 
     if(fp == NULL){
-        (*users) = NULL;
-        usersHeaders->qtdUsuarios = 0;
         return 0;
     } 
 
     // Arquivo existe mas está vazio, também retorna uma lista vazia
     if( fread( usersHeaders, sizeof(UsuariosHeader), 1, fp) != 1){
-        (*users) = NULL;
-        usersHeaders->qtdUsuarios = 0;
         return 0;
     }
 
     // Lê os @qtdUsuarios do arquivo
-    (*users) = calloc(sizeof(Usuario), usersHeaders->qtdUsuarios);
-    for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
-        if( fread( &((*users)[i]), sizeof(Usuario), 1, fp) != 1 ){
-            usersHeaders->qtdUsuarios = i;
-            break;
+    if(usersHeaders->qtdUsuarios > 0){
+        (*users) = calloc(sizeof(Usuario), usersHeaders->qtdUsuarios);
+        for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
+            if( fread( &((*users)[i]), sizeof(Usuario), 1, fp) != 1 ){
+                usersHeaders->qtdUsuarios = i;
+                break;
+            }
         }
-    }
+    } 
     
     // Fecha o arquivo e finaliza a função
     fclose(fp);
     return 0;
 }
-
 
 int usr_descarregarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
     if(usersHeaders == NULL || users == NULL)
@@ -76,7 +75,7 @@ int usr_inserirNovoUsuario(UsuariosHeader* usersHeaders, Usuario** users, Usuari
     
     usersHeaders->qtdUsuarios += 1;
     (*users) = realloc((*users), usersHeaders->qtdUsuarios * sizeof(Usuario));
-    (*users)[indice] = *u;
+    (*users)[indice] = (*u);
 
     return 0;
 }
@@ -87,7 +86,7 @@ int usr_buscarUsuario(UsuariosHeader* usersHeaders, Usuario** users, char* login
 
     // Busca o login no vetor de usuarios, se existir retorna a posição senão retorna -1
     for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
-        if(strcmp(login, users[i]->login) == 0)
+        if(strcmp(login, (*users)[i].login ) == 0)
             return i;
     }
 
@@ -98,7 +97,9 @@ void usr_listarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
     if(usersHeaders == NULL || users == NULL)
         return;
 
+    printf("\tQuantidade de usuários: %d.\n", usersHeaders->qtdUsuarios);
     for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
-        printf("\t[%d], [%s]\n", (*users)[i].id, (*users)[i].login);
+        printf("\tUsuário nº %d\tLogin: '%s'\n", (*users)[i].id, (*users)[i].login);
     }
+    getchar();
 }
