@@ -3,7 +3,7 @@ build:
 	rm *.o
 
 all:
-	gcc -o exec usuarios.c dados.c telas.c main.c
+	gcc -o exec usuarios.c dados.c relacionamento.c solicitacoes.c telas.c main.c
 
 run:
 	./exec

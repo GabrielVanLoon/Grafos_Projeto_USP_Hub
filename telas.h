@@ -6,6 +6,7 @@
      */
     #include "usuarios.h"
     #include "dados.h"
+    #include "relacionamento.h"
 
     /**
      * MAPEAMENTO DAS TELAS
@@ -25,7 +26,7 @@
         /**
          * Exibe as opcoes da tela de Dashboard. O usuário precisa já estar logado.
          */
-        int carregarTelaDashboard();
+        int carregarTelaDashboard(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user);
 
     /**
      * FORMULÁRIOS E OUTRAS INTERAÇÕES

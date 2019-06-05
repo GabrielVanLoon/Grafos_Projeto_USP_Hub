@@ -12,7 +12,7 @@
  */
 int main(void){
     
-    // Variáveis que serão manipuladas pelo sistema
+    // Variáveis que serão manipuladas pelo sistema à nivel de login
     UsuariosHeader  glob_usuariosHeader;
     Usuario*        glob_usuarios;
     Usuario         glob_usuarioAtual;
@@ -31,12 +31,12 @@ int main(void){
                 telaAtual = carregarTelaLogin(&glob_usuariosHeader, &glob_usuarios, &glob_usuarioAtual);
                 break;
             case TELA_DASHBOARD:
-                telaAtual = carregarTelaDashboard();
+                telaAtual = carregarTelaDashboard(&glob_usuariosHeader, &glob_usuarios, &glob_usuarioAtual);
                 break;
         }
     }
 
-    // Realiza o free dos dados e reescreve o indice da memória para o disco
+    // Desaloca da memórias as variáveis à nivel de login
     usr_descarregarUsuarios(&glob_usuariosHeader, &glob_usuarios);
 
     return 0;

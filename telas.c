@@ -40,32 +40,41 @@
         return TELA_LOGIN; 
     }
 
-    int carregarTelaDashboard(){
+    int carregarTelaDashboard(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
         char opcao = 0;
-        do {
-            system("clear");
-            printf("\n\t***** REDE SOCIAL - DASHBOARD\n\n");
-            printf("\t1 - Ver lista de amizades\n");
-            printf("\t2 - Ver sugestões de amizades\n");
-            printf("\t3 - Enviar solicitação de amizade\n");
-            printf("\t4 - Encontrar parceiro(a) ideal\n");
-            printf("\t0 - Sair\n");
-            printf("\n\tSelecione a Opção: ");
-            fflush(stdout);
 
-            scanf(" %c", &opcao); 
-            getchar();
-        } while(opcao < '0' || opcao > '4');
+        // Carregando as variáveis que serão manipuladas à nivel de dashboard
+        Relacionamento dsh_amigosUsuario; 
 
-        if(opcao == '1'){
+        // Mostra as solicitações de amizade pendentes
 
-        } else if(opcao == '0'){
+        // Exibe as principais opções do painel
+        while(opcao != '0'){
+            do {
+                system("clear");
+                printf("\n\t***** REDE SOCIAL - DASHBOARD\n\n");
+                printf("\t1 - Ver lista de amizades\n");
+                printf("\t2 - Ver sugestões de amizades\n");
+                printf("\t3 - Enviar solicitação de amizade\n");
+                printf("\t4 - Excluir amizade\n");
+                printf("\t5 - Encontrar parceiro(a) ideal\n");
+                printf("\t0 - Sair\n");
+                printf("\n\tSelecione a Opção: ");
+                fflush(stdout);
 
-            return TELA_LOGIN;
+                scanf(" %c", &opcao); 
+                getchar();
+            } while(opcao < '0' || opcao > '5');
+
+            if(opcao == '1'){
+
+            } 
+
         }
 
-
-        return TELA_DASHBOARD; // todo
+        // Desaloca da memórias as variáveis à nível de dashboard
+            
+        return TELA_LOGIN; // todo
     }
 
 /** FORMULÁRIOS DO SISTEMA

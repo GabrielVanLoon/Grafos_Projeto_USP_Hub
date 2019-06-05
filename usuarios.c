@@ -77,6 +77,14 @@ int usr_inserirNovoUsuario(UsuariosHeader* usersHeaders, Usuario** users, Usuari
     (*users) = realloc((*users), usersHeaders->qtdUsuarios * sizeof(Usuario));
     (*users)[indice] = (*u);
 
+    // Também escreve o usuário no arquivo para manter ele pertinente
+    FILE* fp = fopen(arquivoUsuarios, "r+b");
+    if(fp == NULL) fp = fopen(arquivoUsuarios, "w+b");
+        
+    fseek(fp, 0, SEEK_END);
+    fwrite(u, sizeof(Usuario), 1, fp);
+    fclose(fp);
+
     return 0;
 }
 
