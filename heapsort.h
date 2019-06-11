@@ -7,7 +7,6 @@
 
 int maiorId(Relacionamento* heap, int indexA, int indexB);
 
-
 int maiorPontos(Relacionamento* heap, int indexA, int indexB);
 
 void trocar(Relacionamento* heap, int indexA, int indexB);
