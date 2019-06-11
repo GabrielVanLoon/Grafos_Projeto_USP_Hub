@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct no {
+typedef struct relacionamento_no {
 	int		id;
 	int		pontos; //pontos de afinidade.
 } NoRelacionamento;
