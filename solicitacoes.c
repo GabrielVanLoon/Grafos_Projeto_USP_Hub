@@ -13,13 +13,15 @@ void construir_heap_sol(Solicitacoes* heap, int (*ordenar)(Solicitacoes*, int, i
 
 int sol_novoUsuario() {
 	FILE* fp = fopen(arquivoSolicitacoes, "rb+");
+	Solicitacoes sol;
+	char buff; //caso esteja vazio arquivo 
 	if (fp == NULL)
 		fp = fopen(arquivoSolicitacoes, "wb+");
-	fseek(fp, 0, SEEK_END);
-	fwrite("0", sizeof(int), 1, fp); //Numero de Solicitacoess
+	if(fread(&buff, sizeof(char), 1, fp)) fseek(fp, 0, SEEK_END);
+	sol.nroSolicitacoes = 0; //Numero de Solicitacoess
 	for (int i = 0; i < 100; i++){
-		fwrite("0", sizeof(int), 1, fp); //id
-		fwrite("0", sizeof(int), 1, fp); //pontos
+		sol.pendencias[i].id = 0; //id
+		sol.pendencias[i].pontos = 0; //pontos
 	}
 	fclose(fp);
 	return 0;
@@ -28,12 +30,8 @@ int sol_novoUsuario() {
 int sol_escreverSolicitacoes(Solicitacoes* sol, int id){
 	FILE* fp = fopen(arquivoSolicitacoes, "rb+");
 	if (fp == NULL) return 1;
-	fseek(fp, (id-1)*tamanhoSolicitacoes, SEEK_SET);
-	fwrite(&sol->nroSolicitacoes, sizeof(int), 1, fp);
-	for (int i = 0; i < sol->nroSolicitacoes; i++){
-		fwrite(&sol->pendencias[i].id, sizeof(int), 1, fp);
-		fwrite(&sol->pendencias[i].pontos, sizeof(int), 1, fp);
-	}
+	fseek(fp, (id-1)*sizeof(Solicitacoes), SEEK_SET);
+	fwrite(sol, sizeof(Solicitacoes), 1, fp);
 	fclose(fp);
 	return 0;
 }
@@ -41,12 +39,8 @@ int sol_escreverSolicitacoes(Solicitacoes* sol, int id){
 int sol_lerSolicitacoess(Solicitacoes* sol, int id){
 	FILE* fp = fopen(arquivoSolicitacoes, "rb");
 	if (fp == NULL) return 1;
-	fseek(fp, (id-1)*tamanhoSolicitacoes, SEEK_SET);
-	fread(&sol->nroSolicitacoes, sizeof(int), 1, fp);
-	for (int i = 0; i < sol->nroSolicitacoes; i++){
-		fread(&sol->pendencias[i].id, sizeof(int), 1, fp);
-		fread(&sol->pendencias[i].pontos, sizeof(int), 1, fp);
-	}
+	fseek(fp, (id-1)*sizeof(Solicitacoes), SEEK_SET);
+	fread(sol, sizeof(Solicitacoes), 1, fp);
 	fclose(fp);
 	return 0;
 }
