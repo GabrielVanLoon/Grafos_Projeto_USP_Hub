@@ -81,13 +81,15 @@ int rel_removeAmizade (Relacionamento* rel, int id, int idAmigo){
 	
 	heapsort_relacionamento(rel, maiorId); //heapsort_relacionamento pelo id
 
-	if(pos = busca_binaria_indice(rel, maiorId, idAmigo), pos != -1) //remove
-	{
+	if(pos = busca_binaria_indice(rel, maiorId, idAmigo), pos != -1) { //remove
 		rel->amizades[pos].id = 0;
 		rel->amizades[pos].pontos = 0;
+		heapsort_relacionamento(rel, maiorPontos); // heapsort_relacionamento pelos pontos
+		rel->nroRelacionamento--;
+	} else {
+		heapsort_relacionamento(rel, maiorPontos); // heapsort_relacionamento pelos pontos
 	}
-	heapsort_relacionamento(rel, maiorPontos); // heapsort_relacionamento pelos pontos
-	rel->nroRelacionamento--;
+
 
 	if(rel_escreverRelacionamento(rel, id)) return 1; // reescrita
 	return 0;

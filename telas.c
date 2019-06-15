@@ -15,12 +15,12 @@
             printf("\t1 - Fazer Login\n");
             printf("\t2 - Crie uma conta!\n");
             printf("\t3 - Mostrar logins\n");
-            printf("\t5 - Sair\n");
+            printf("\t0 - Sair\n");
             printf("\n\tSelecione a Opção: ");
             fflush(stdout);
 
             scanf(" %c", &opcao); getchar();
-        } while(opcao != '1' && opcao != '2' && opcao != '5' && opcao != '3');
+        } while(opcao != '1' && opcao != '2' && opcao != '3' && opcao != '0');
         
 
         // Fazendo as chamadas das opções
@@ -34,7 +34,7 @@
             printf("\n\n\t***** REDE SOCIAL - LISTA DE LOGINS\n\n");
             usr_listarUsuarios(usersHeaders, users);
         
-        } else if(opcao == '5'){
+        } else if(opcao == '0'){
             return SAIR_PROGRAMA;
         } 
             
@@ -46,8 +46,6 @@
 
         // Mostra as solicitações de amizade pendentes caso existam
         Solicitacoes   dsh_solicitacoesPendentes;
-        
-
         if(!sol_lerSolicitacoes(&dsh_solicitacoesPendentes, user->id) &&
             dsh_solicitacoesPendentes.nroSolicitacoes > 0){
             
@@ -55,10 +53,10 @@
         }
 
         // Carregando as variáveis que serão manipuladas à nivel de dashboard
-        // Relacionamento dsh_amigosUsuario; 
-        // Dados          dsh_dadosAmigosUsuario;            
+        Relacionamento dsh_amigosUsuario;           
         // ?????          dsh_pontosAfinidade;
 
+        rel_lerRelacionamentos(&dsh_amigosUsuario, user->id);
 
         // Exibe as principais opções do painel
         while(opcao != '0'){
@@ -79,14 +77,20 @@
             } while(opcao < '0' || opcao > '5');
 
             switch(opcao){
-                case '1':
                 case '2':
-                case '4':
                 case '5':
                     break;
-
+                
+                case '1':
+                    carregarTelaListarAmigos(users, user, &dsh_amigosUsuario);
+                    break;
+                    
                 case '3':
                     carregarFormularioAdicionarAmigo(usersHeaders, users, user);
+                    break;
+
+                case '4':
+                    carregarFormularioRemoverAmigo(users, user, &dsh_amigosUsuario);
                     break;
             } 
         }
@@ -133,7 +137,24 @@
         return TELA_DASHBOARD;
     }
 
-    int carregarTelaListarAmigos(){
+    int carregarTelaListarAmigos(Usuario** users, Usuario* user, Relacionamento* amigos){
+        
+        system("clear");
+        printf("\n\t***** REDE SOCIAL - LISTA DE AMIGOS\n");
+
+        if(amigos->nroRelacionamento <= 0)
+            printf("\n\tVocê ainda não tem nenhum amigx =(\n");
+        else
+            printf("\n\tVocê possui %d amigos.\n\n", amigos->nroRelacionamento);
+
+        for(int i = 0; i < amigos->nroRelacionamento; i++){ 
+            int id = amigos->amizades[i].id;
+            printf("\tnº %02d  -  @%-20s (%d pontos de afinidade)\n", i+1, (*users)[id-1].login, amigos->amizades[i].pontos);
+        }
+
+        printf("\n\tpressione ENTER para continuar...\n");
+        getchar();
+
         return TELA_DASHBOARD;
     }
 
@@ -286,7 +307,40 @@
         return TELA_DASHBOARD;
     }
 
-    int carregarFormularioRemoverAmigo(){
-        // TODO
+    int carregarFormularioRemoverAmigo(Usuario** users, Usuario* user, Relacionamento* amigos){
+        Usuario amigo;
+       
+        system("clear");
+        printf("\n\t***** REDE SOCIAL - REMOVER AMIGO\n\n");
+        printf("\n\tInsira o login de quem deseja remover: @");
+        scanf("%60s%*c", amigo.login);
+        
+        // Buscando o amigo
+        amigo.id = -1;
+        for(int i = 0; i < amigos->nroRelacionamento; i++){
+            int id = amigos->amizades[i].id;
+            if(strcmp(amigo.login, (*users)[id -1].login) == 0){
+                amigo.id = (*users)[i].id;
+                break;
+            }
+        }
+
+        // Caso o login não exista
+        if(amigo.id == -1){
+            printf("\n\tNão encontramos o usuário @%s na sua lista de amizes.\n", amigo.login);
+            printf("\tpressione ENTER para voltar...\n");
+            getchar();
+        } else {
+
+            rel_removeAmizade(amigos, user->id, amigo.id);
+            rel_removeAmizade(amigos, amigo.id, user->id);
+            rel_lerRelacionamentos(amigos, user->id); // Carregando os amigos atualizado
+
+            printf("\n\tRemoção feita com sucesso!\n");
+            printf("\tpressione ENTER para voltar...\n");
+            getchar();
+
+        }
+        
         return TELA_DASHBOARD;
     }

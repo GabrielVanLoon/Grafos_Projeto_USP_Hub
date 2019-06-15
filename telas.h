@@ -37,7 +37,7 @@
         /**
          * Exibe todos os amigos do usuario logado.
          */
-        int carregarTelaListarAmigos();
+        int carregarTelaListarAmigos(Usuario** users, Usuario* user, Relacionamento* amigos);
 
         /**
          * Exibe a tela sugerindo as 20 pessoas com maior pontuação de afinidade.
