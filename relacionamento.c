@@ -1,7 +1,7 @@
 #include "relacionamento.h"
 
 const char arquivoRelacionamento[] = "binarios/relacionamento.bin";
-const int tamanhoRelacionamento = 804;
+const int tamanhoRelacionamento = sizeof(Relacionamento);
 
 /* heapsort ====================================================================== */
 int maiorId(Relacionamento* heap, int indexA, int indexB);
@@ -62,7 +62,6 @@ int rel_addAmizade (Relacionamento* rel, int id, int idAmigo, int pontosAmigo){
 	if(rel->nroRelacionamento >= 99) return 2;
 	rel->amizades[rel->nroRelacionamento].id = idAmigo;
 	rel->amizades[rel->nroRelacionamento].pontos = pontosAmigo;
-	printf(" %d %d", rel->amizades[rel->nroRelacionamento].id, rel->amizades[rel->nroRelacionamento].pontos);
 	rel->nroRelacionamento++;
 	// heapsort_relacionamento pelos pontos
 	heapsort_relacionamento(rel, maiorPontos);
@@ -122,9 +121,9 @@ void construir_heap(Relacionamento* heap, int(*ordenar)(Relacionamento*, int, in
     int esq = (2*i) + 1;
     int dir = (2*i) + 2;
 
-    if(esq < n && ordenar(heap, esq, maior) > 0) maior = esq;
+    if(esq < n && ordenar(heap, esq, maior) > esq) maior = esq;
     
-    if(dir < n && ordenar(heap, dir, maior) > 0) maior = dir;
+    if(dir < n && ordenar(heap, dir, maior) > dir) maior = dir;
      
     if(maior != i) {
         trocar(heap, i, maior); 

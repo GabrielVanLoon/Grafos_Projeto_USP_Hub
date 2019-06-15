@@ -10,7 +10,7 @@ typedef struct no_solicitacoes {
 
 typedef struct Solicitacoes_ {
 	NoSolicitacoes 	pendencias[100];
-	int 				nroSolicitacoes;
+	int 			nroSolicitacoes;
 } Solicitacoes;
 
 /* Inicializa Solicitacoess com pontuacao zero*/
@@ -18,7 +18,7 @@ int sol_novoUsuario();
 
 int sol_escreverSolicitacoes(Solicitacoes* sol, int id);
 
-int sol_lerSolicitacoes(Solicitacoes* sol);
+int sol_lerSolicitacoes(Solicitacoes* sol, int id);
 
 int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo);
 
@@ -32,11 +32,15 @@ int sol_recusarSolicitacao (Solicitacoes* sol, int id, int idAmigo);
 void heapsort_solicitacoes(Solicitacoes* heap, int (*ordenar)(Solicitacoes*, int, int));
 
 /* Exibe vetor */
-void print_heap(Solicitacoes* heap);
+void print_heap_solicitacoes(Solicitacoes* heap);
 
 /* Busca binaria =======================================================================*/
 
 /* Busca binaria no vetor pendencias de Solicitacoes */
 int busca_binaria_solicitacoes(Solicitacoes* solicitacoes, int(*ordenar)(Solicitacoes*, int, int),  int valor);
+
+int maiorIdSolicitado(Solicitacoes* heap, int indexA, int indexB);
+
+int maiorPontosSolicitado(Solicitacoes* heap, int indexA, int indexB);
 
 #endif

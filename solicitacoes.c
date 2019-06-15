@@ -1,11 +1,6 @@
 #include "solicitacoes.h"
 
 const char arquivoSolicitacoes[] = "binarios/solicitacoes.bin";
-const int tamanhoSolicitacoes = 804;
-
-int maiorIdSolicitado(Solicitacoes* heap, int indexA, int indexB);
-
-int maiorPontosSolicitado(Solicitacoes* heap, int indexA, int indexB);
 
 void trocar_sol(Solicitacoes* heap, int indexA, int indexB);
 
@@ -17,12 +12,13 @@ int sol_novoUsuario() {
 	char buff; //caso esteja vazio arquivo 
 	if (fp == NULL)
 		fp = fopen(arquivoSolicitacoes, "wb+");
-	if(fread(&buff, sizeof(char), 1, fp)) fseek(fp, 0, SEEK_END);
+	fseek(fp, 0, SEEK_END);
 	sol.nroSolicitacoes = 0; //Numero de Solicitacoess
 	for (int i = 0; i < 100; i++){
 		sol.pendencias[i].id = 0; //id
 		sol.pendencias[i].pontos = 0; //pontos
 	}
+	fwrite(&sol, sizeof(Solicitacoes), 1, fp);
 	fclose(fp);
 	return 0;
 }
@@ -36,7 +32,7 @@ int sol_escreverSolicitacoes(Solicitacoes* sol, int id){
 	return 0;
 }
 
-int sol_lerSolicitacoess(Solicitacoes* sol, int id){
+int sol_lerSolicitacoes(Solicitacoes* sol, int id){
 	FILE* fp = fopen(arquivoSolicitacoes, "rb");
 	if (fp == NULL) return 1;
 	fseek(fp, (id-1)*sizeof(Solicitacoes), SEEK_SET);
@@ -51,11 +47,12 @@ int sol_lerSolicitacoess(Solicitacoes* sol, int id){
 *@return 2: Numero máximo de amigos excedido
 **/
 int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo){
-	if(sol_lerSolicitacoess(sol, id)) return 1;
+	//if(sol_lerSolicitacoes(sol, id)) return 1;
+//	printf("num %d", sol->nroSolicitacoes);
 	if(sol->nroSolicitacoes >= 99) return 2;
 	sol->pendencias[sol->nroSolicitacoes].id = idAmigo;
 	sol->pendencias[sol->nroSolicitacoes].pontos = pontosAmigo;
-	sol->nroSolicitacoes++;
+	
 	// heapsort_solicitacoes pelos pontos
 	heapsort_solicitacoes(sol, maiorPontosSolicitado);
 	if(sol_escreverSolicitacoes(sol, id)) return 1;
@@ -69,7 +66,7 @@ int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo)
 *@return 2: Nao ha amigos
 **/
 int sol_recusarSolicitacao (Solicitacoes* sol, int id, int idAmigo){
-	if(sol_lerSolicitacoess(sol, id)) return 1;
+	if(sol_lerSolicitacoes(sol, id)) return 1;
 	if(sol->nroSolicitacoes <= 0) return 2;
 	int pos;
 	
@@ -113,9 +110,9 @@ void construir_heap_sol(Solicitacoes* heap, int(*ordenar)(Solicitacoes*, int, in
     int esq = (2*i) + 1;
     int dir = (2*i) + 2;
 
-    if(esq < n && ordenar(heap, esq, maior) > 0) maior = esq;
+    if(esq < n && ordenar(heap, esq, maior) == esq) maior = esq;
     
-    if(dir < n && ordenar(heap, dir, maior) > 0) maior = dir;
+    if(dir < n && ordenar(heap, dir, maior) == dir) maior = dir;
      
     if(maior != i) {
         trocar_sol(heap, i, maior); 
@@ -143,7 +140,7 @@ void heapsort_solicitacoes(Solicitacoes* heap, int(*ordenar)(Solicitacoes*, int,
 
 void print_heap_solicitacoes(Solicitacoes* heap) {
     for(int i = 0; i < heap->nroSolicitacoes; ++i) {
-        printf("id: %d pontos: %d\n", heap->pendencias[i].id, heap->pendencias[i].pontos);
+        printf("id: %d pontos: %d ", heap->pendencias[i].id, heap->pendencias[i].pontos);
     }
 }
 
@@ -152,7 +149,7 @@ void print_heap_solicitacoes(Solicitacoes* heap) {
 int busca_binaria_solicitacoes(Solicitacoes* solicitacoes, int(*ordenar)(Solicitacoes*, int, int),  int valor) {
 	int inicio = 0, fim, meio;
     fim = solicitacoes->nroSolicitacoes;
-    while(inicio <= fim) {
+    while(inicio < fim) {
         meio = (inicio + fim) / 2;
         int u = ordenar(solicitacoes, meio, valor);
         if(u == meio) return meio; 
