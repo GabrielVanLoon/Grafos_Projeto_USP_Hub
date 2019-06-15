@@ -1,8 +1,9 @@
 #include "telas.h"
+#include "relacionamento.h"
+#include "solicitacoes.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 
 /** TELAS DO SISTEMA
  */
@@ -43,13 +44,21 @@
     int carregarTelaDashboard(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
         char opcao = 0;
 
+        // Mostra as solicitações de amizade pendentes caso existam
+        Solicitacoes   dsh_solicitacoesPendentes;
+        
+
+        if(!sol_lerSolicitacoes(&dsh_solicitacoesPendentes, user->id) &&
+            dsh_solicitacoesPendentes.nroSolicitacoes > 0){
+            
+            carregarTelaSolicitacoesPendentes(users, user, &dsh_solicitacoesPendentes);
+        }
+
         // Carregando as variáveis que serão manipuladas à nivel de dashboard
-        // Relacionamento dsh_amigosUsuario;
+        // Relacionamento dsh_amigosUsuario; 
         // Dados          dsh_dadosAmigosUsuario;            
-        // Solicitacoes   dsh_solicitacoesPendentes;    
         // ?????          dsh_pontosAfinidade;
 
-        // Mostra as solicitações de amizade pendentes caso existam
 
         // Exibe as principais opções do painel
         while(opcao != '0'){
@@ -69,9 +78,17 @@
                 getchar();
             } while(opcao < '0' || opcao > '5');
 
-            if(opcao == '1'){
+            switch(opcao){
+                case '1':
+                case '2':
+                case '4':
+                case '5':
+                    break;
 
-            }
+                case '3':
+                    carregarFormularioAdicionarAmigo(usersHeaders, users, user);
+                    break;
+            } 
         }
 
         // Desaloca da memórias as variáveis à nível de dashboard
@@ -79,7 +96,40 @@
         return TELA_LOGIN; // todo
     }
 
-    int carregarTelaSolicitacoesPendentes(){
+    int carregarTelaSolicitacoesPendentes(Usuario** users, Usuario* user, Solicitacoes* solicitacoes){
+        Relacionamento rel;
+        char opt;
+        int  aux, aux2;
+
+        for(int i = 0; i < solicitacoes->nroSolicitacoes; i++){
+            
+            int id = solicitacoes->pendencias[i].id;
+
+            system("clear");
+            printf("\n\t***** REDE SOCIAL - PEDIDO DE AMIZADE\n\n");
+            printf("\n\tO usuário @%s te enviou uma solicitação de amizade!\n", (*users)[id-1].login);
+            printf("\tVocês possuem %d pontos de afinidade.\n", solicitacoes->pendencias[i].pontos);
+            printf("\tDeseja aceitar? (s/n): ");
+            scanf(" %c%*c", &opt);
+
+            if(opt == 's'){
+                aux  = rel_addAmizade(&rel, user->id, solicitacoes->pendencias[i].id, solicitacoes->pendencias[i].pontos);
+                aux2 = rel_addAmizade(&rel, solicitacoes->pendencias[i].id, user->id, solicitacoes->pendencias[i].pontos);
+
+                if(aux == 1 || aux == 2){
+                    printf("\n\tOcorreu um erro ao aceitar a solicitação.\n");
+                    printf("\n\tVerifique se você não alcançou o limite de amigos.\n");
+                } else {
+                    printf("\n\tUsuário adicionado com sucesso.\n");
+                }
+                printf("\n\tpressione ENTER para continuar...\n");
+                getchar();
+            }
+
+            // Exclui o cadastro da solicitação de amizade
+            sol_excluirSolicitacao(user->id, solicitacoes->pendencias[i].id);
+        }
+                        
         return TELA_DASHBOARD;
     }
 
@@ -164,6 +214,8 @@
         // Agora só insere os dados no vetor de usuarios e no arquivo de dados
         usr_inserirNovoUsuario(usersHeaders, users, &novoUsuario);
         dad_escreverDados(&dados);
+        rel_novoUsuario();
+        sol_novoUsuario();
         
         // Mensagem final avisando que o usuário foi inserido com sucesso
         
@@ -200,8 +252,37 @@
         return TELA_LOGIN;
     }
 
-    int carregarFormularioAdicionarAmigo(){
-        // TODO
+    int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
+        Usuario novoAmigo;
+       
+        system("clear");
+        printf("\n\t***** REDE SOCIAL - ADICIONAR AMIGO\n\n");
+        printf("\n\tInsira o login de quem deseja adicionar: @");
+        scanf("%60s%*c", novoAmigo.login);
+        
+        // Buscando o amigo
+        novoAmigo.id = -1;
+        for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
+            if(strcmp(novoAmigo.login, (*users)[i].login) == 0){
+                novoAmigo.id = (*users)[i].id;
+                break;
+            }
+        }
+
+        // Caso o login não exista
+        if(novoAmigo.id == -1){
+            printf("\n\tNão encontramos o usuário @%s no sistema.\n", novoAmigo.login);
+            printf("\tpressione ENTER para voltar...\n");
+            getchar();
+        } else {
+
+            sol_addSolicitacao(novoAmigo.id, user->id , 15);
+            printf("\n\tSolicitação enviada com sucesso!\n");
+            printf("\tpressione ENTER para voltar...\n");
+            getchar();
+
+        }
+        
         return TELA_DASHBOARD;
     }
 

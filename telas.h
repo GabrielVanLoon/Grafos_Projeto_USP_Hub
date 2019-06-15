@@ -6,6 +6,8 @@
      */
     #include "usuarios.h"
     #include "dados.h"
+    #include "relacionamento.h"
+    #include "solicitacoes.h"
 
     /**
      * MAPEAMENTO DAS TELAS
@@ -30,7 +32,7 @@
         /**
          * Exibe todas as solicitações pendentes do usuário. Sendo ele obrigado à aceitar ou recusar elas.
          */
-        int carregarTelaSolicitacoesPendentes();
+        int carregarTelaSolicitacoesPendentes(Usuario** users, Usuario* user, Solicitacoes* solicitacoes);
 
         /**
          * Exibe todos os amigos do usuario logado.

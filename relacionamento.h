@@ -9,7 +9,7 @@
 */
 
 #ifndef RELACIONAMENTO_H
-#define RELACIONAAMENTO_H
+#define RELACIONAMENTO_H
 #include <stdio.h>
 #include <stdlib.h>
 

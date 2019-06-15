@@ -46,16 +46,19 @@ int sol_lerSolicitacoes(Solicitacoes* sol, int id){
 *@return 1: Erro de abertura de arquivo
 *@return 2: Numero máximo de amigos excedido
 **/
-int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo){
-	//if(sol_lerSolicitacoes(sol, id)) return 1;
-//	printf("num %d", sol->nroSolicitacoes);
-	if(sol->nroSolicitacoes >= 99) return 2;
-	sol->pendencias[sol->nroSolicitacoes].id = idAmigo;
-	sol->pendencias[sol->nroSolicitacoes].pontos = pontosAmigo;
+int sol_addSolicitacao (int id, int idAmigo, int pontosAmigo){
+	Solicitacoes sol;
 	
+	if(sol_lerSolicitacoes(&sol, id)) return 1;
+	if(sol.nroSolicitacoes >= 99) return 2;
+
+	sol.pendencias[sol.nroSolicitacoes].id = idAmigo;
+	sol.pendencias[sol.nroSolicitacoes].pontos = pontosAmigo;
+	sol.nroSolicitacoes += 1;
+
 	// heapsort_solicitacoes pelos pontos
-	heapsort_solicitacoes(sol, maiorPontosSolicitado);
-	if(sol_escreverSolicitacoes(sol, id)) return 1;
+	heapsort_solicitacoes(&sol, maiorPontosSolicitado);
+	if(sol_escreverSolicitacoes(&sol, id)) return 1;
 	return 0;
 }
 
@@ -65,22 +68,24 @@ int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo)
 *@return 1: Erro de abertura de arquivo
 *@return 2: Nao ha amigos
 **/
-int sol_recusarSolicitacao (Solicitacoes* sol, int id, int idAmigo){
-	if(sol_lerSolicitacoes(sol, id)) return 1;
-	if(sol->nroSolicitacoes <= 0) return 2;
+int sol_excluirSolicitacao ( int id, int idAmigo){
+	Solicitacoes sol;
+	
+	if(sol_lerSolicitacoes(&sol, id)) return 1;
+	if(sol.nroSolicitacoes <= 0) return 2;
 	int pos;
 	
-	heapsort_solicitacoes(sol, maiorIdSolicitado); //heapsort_solicitacoes pelo id
+	heapsort_solicitacoes(&sol, maiorIdSolicitado); //heapsort_solicitacoes pelo id
 
-	if(pos = busca_binaria_solicitacoes(sol, maiorIdSolicitado, idAmigo), pos != -1) //remove
+	if(pos = busca_binaria_solicitacoes(&sol, maiorIdSolicitado, idAmigo), pos != -1) //remove
 	{
-		sol->pendencias[pos].id = 0;
-		sol->pendencias[pos].pontos = 0;
+		sol.pendencias[pos].id = 0;
+		sol.pendencias[pos].pontos = 0;
 	}
-	heapsort_solicitacoes(sol, maiorPontosSolicitado); // heapsort_solicitacoes pelos pontos
-	sol->nroSolicitacoes--;
+	heapsort_solicitacoes(&sol, maiorPontosSolicitado); // heapsort_solicitacoes pelos pontos
+	sol.nroSolicitacoes--;
 
-	if(sol_escreverSolicitacoes(sol, id)) return 1; // reescrita
+	if(sol_escreverSolicitacoes(&sol, id)) return 1; // reescrita
 	return 0;
 }
 
