@@ -137,7 +137,8 @@
             }
 
             // Exclui o cadastro da solicitação de amizade
-            sol_excluirSolicitacao(user->id, solicitacoes->pendencias[i].id);
+            Solicitacoes inutil; // variavel desnecessaria para a função.... 
+            sol_excluirSolicitacao(&inutil, user->id, solicitacoes->pendencias[i].id);
         }
                         
         return TELA_DASHBOARD;
@@ -182,49 +183,162 @@
         dados.id            = usersHeaders->qtdUsuarios + 1;
         novoUsuario.id      = usersHeaders->qtdUsuarios + 1;
 
-        // Faz o usuário preencher os dados
-        system("clear");
-        printf("\n\t***** REDE SOCIAL - CADASTRAR USUÁRIO\n\n");
-             
-        printf("\tNome: ");
-        scanf(" %59[^\r\n]", dados.nome);
+        /**
+         * Primeira etapa - dados pessoas
+         */
+        mostrarTitulo("CRIAR CADASTRO - DADOS PESSOAIS");
+          
+        printf("\n");
+        printf("\t   Nome: ");
+        scanf(" %59[^\r\n]%*c", dados.nome);
 
-        printf("\tIdade: ");
-        scanf(" %d", &dados.idade);
+        printf("\n");
+        printf("\t   Idade: ");
+        scanf(" %d%*c", &dados.idade);
 
-        printf("\tGênero Masculino [m] ou Feminino [f]: ");
-        scanf(" %c", &dados.genero);
+        printf("\n");
+        printf("\t   Gênero Masculino %s[m]%s ou Feminino %s[f]%s: ", CVERDE, RESET, CVERDE, RESET);
+        scanf(" %c%*c", &dados.genero);
 
-        printf("\tOrientação Hetero[e], Homossexual[o] ou Bissexual[b]: ");
-        scanf(" %c", &dados.orientacao);
+        printf("\n");
+        printf("\t   Orientação Hetero%s[e]%s, Homossexual%s[o]%s ou Bissexual%s[b]%s: ", CVERDE, RESET, CVERDE, RESET, CVERDE, RESET);
+        scanf(" %c%*c", &dados.orientacao);
 
-        printf("\tEstou namorando (s/n): ");
-        scanf(" %c", &dados.namorando);
+        printf("\n");
+        printf("\t   Estou namorando (%ss/n%s): ", CVERDE, RESET);
+        scanf(" %c%*c", &dados.namorando);
 
         // Verifica se todos os dados foram inseridos corretamente
         fflush(stdout);
         if( strlen(dados.nome) == 0 || dados.idade < 16 || (dados.genero != 'm' && dados.genero != 'f')
             || (dados.orientacao != 'e' && dados.orientacao != 'o' && dados.orientacao != 'b') 
             || (dados.namorando != 's' && dados.namorando != 'n')) {
-                getchar();
-                printf("\n\tVocê preencheu algum dado incorretamente!\n");
-                printf("\tpressione ENTER para voltar\n");
-                getchar();
+                printf("\n");
+                printf("\t   Você preencheu algum dado incorretamente!\n");
+                printf("\n");
+                mostrarPressioneEnter();
                 return TELA_LOGIN;
         }
         
-        // Faz o usuário preencher as preferencias dele (filme, musica, etc...)
-        // @TODO 
+        /**
+         * Segunda etapa - escolher as preferencias
+         */
+        char musica, cidade, filme, livro, tribo;
 
-        // Faz o usuario criar um login
+        do {
+            mostrarTitulo("CRIAR CADASTRO - ESTILO MUSICAL");
+
+            mostrarOpcao('a', "Sertenejo");
+            mostrarOpcao('b', "Rock");
+            mostrarOpcao('c', "Gospel");
+            mostrarOpcao('d', "MPB");
+            mostrarOpcao('e', "Pop");
+            mostrarOpcao('f', "Reggae");
+            mostrarOpcao('g', "Samba");
+            mostrarOpcao('h', "Pagode");
+            mostrarOpcao('i', "Funk");
+            mostrarOpcao('j', "Eletronica");
+            mostrarOpcao('k', "Outro");
+
+            printf("\t   Selecione a Opção: ");
+            fflush(stdout);
+
+            scanf(" %c*c", &musica);
+        } while('a' > musica || musica > 'k');
+
+        do {
+            mostrarTitulo("CRIAR CADASTRO - CIDADE EM QUE VIVO");
+
+            mostrarOpcao('a', "Analândia");
+            mostrarOpcao('b', "Araraquara");
+            mostrarOpcao('c', "Brotas");
+            mostrarOpcao('d', "Campinas");
+            mostrarOpcao('e', "Ibaté");
+            mostrarOpcao('f', "Limeira");
+            mostrarOpcao('g', "Rio Claro");
+            mostrarOpcao('h', "São Carlos");
+            mostrarOpcao('i', "São Paulo");
+
+            printf("\t   Selecione a Opção: ");
+            fflush(stdout);
+
+            scanf(" %c*c", &cidade);
+        } while('a' > cidade || cidade > 'i');
+
+        do {
+            mostrarTitulo("CRIAR CADASTRO - GENERO DE FILME FAVORITO");
+
+            mostrarOpcao('a', "Ação");
+            mostrarOpcao('b', "Animação");
+            mostrarOpcao('c', "Aventura");
+            mostrarOpcao('d', "Comédia");
+            mostrarOpcao('e', "Comédia Romântica");
+            mostrarOpcao('f', "Documentário");
+            mostrarOpcao('g', "Drama");
+            mostrarOpcao('h', "Ficção Científica");
+            mostrarOpcao('i', "Faroeste");
+            mostrarOpcao('j', "Musical");
+            mostrarOpcao('k', "Romance");
+            mostrarOpcao('l', "Suspense");
+            mostrarOpcao('m', "Terror");
+            mostrarOpcao('n', "Outro");
+
+            printf("\t   Selecione a Opção: ");
+            fflush(stdout);
+
+            scanf(" %c*c", &filme);
+        } while('a' > filme || filme > 'n');
+
+        do {
+            mostrarTitulo("CRIAR CADASTRO - GENERO DE LIVRO FAVORITO");
+
+            mostrarOpcao('a', "Ciencia");
+            mostrarOpcao('b', "Filosofia");
+            mostrarOpcao('c', "Ficcao");
+            mostrarOpcao('d', "Historia");
+            mostrarOpcao('e', "Poesia");
+            mostrarOpcao('f', "AutoAjuda");
+            mostrarOpcao('g', "Romance");
+            mostrarOpcao('h', "Novela");
+            mostrarOpcao('i', "Outro");
+
+            printf("\t   Selecione a Opção: ");
+            fflush(stdout);
+
+            scanf(" %c*c", &livro);
+        } while('a' > livro || livro > 'i');
+
+        do {
+            mostrarTitulo("CRIAR CADASTRO - VOCE PERTENCE A ALGUMA TRIBO?");
+
+            mostrarOpcao('a', "NerdGeek");
+            mostrarOpcao('b', "Hippie");
+            mostrarOpcao('c', "Gotico");
+            mostrarOpcao('d', "Hipster");
+            mostrarOpcao('e', "Kpoper");
+            mostrarOpcao('f', "Otaku");
+            mostrarOpcao('g', "Fitness");
+            mostrarOpcao('h', "Outro");
+
+            printf("\t   Selecione a Opção: ");
+            fflush(stdout);
+
+            scanf(" %c*c", &tribo);
+        } while('a' > tribo || tribo > 'h');
+
+        /**
+         * Terceira etapa - Escolhendo o login
+         */
         int idUsuario = 1, first = 1;
         do {
-            if(!first)
-                printf("\tO login já está sendo utilizado. Por favor escolha outro.\n");
+            mostrarTitulo("CRIAR CADASTRO - ESCOLHA SEU @");
 
-            printf("\tLogin: ");
-            scanf(" %59[^\r\n]", novoUsuario.login);
-            getchar();
+            if(!first)
+                printf("\t   O login @%s já está sendo utilizado.\n", novoUsuario.login);
+
+            printf("\n");
+            printf("\t   Login: @");
+            scanf(" %59s%*c", novoUsuario.login);
 
             // Verifica se o login já existe
             idUsuario = usr_buscarUsuario(usersHeaders, users, novoUsuario.login);
@@ -236,7 +350,20 @@
             first = 0;
         } while(idUsuario != -1);
 
-        // Agora só insere os dados no vetor de usuarios e no arquivo de dados
+        /**
+         * Salva os dados do usuário e prepara os arquivos de dados para receber o
+         * novo registro.
+         */
+        int idMusica, idCidade, idFilme, idLivro, idTribo;
+
+        idMusica = musica - 'a' + 001;
+        idCidade = cidade - 'a' + 101;
+        idFilme = filme   - 'a' + 201;
+        idLivro = livro   - 'a' + 301;
+        idTribo = tribo   - 'a' + 401;
+
+        printf("\n\t   Valores recebidos: %d - %d - %d - %d - %d\n\n", idMusica, idCidade, idFilme, idLivro, idTribo);
+
         usr_inserirNovoUsuario(usersHeaders, users, &novoUsuario);
         dad_escreverDados(&dados);
         rel_novoUsuario();
@@ -244,9 +371,9 @@
         
         // Mensagem final avisando que o usuário foi inserido com sucesso
         
-        printf("\n\tUsuario '%s' cadastrado com sucesso!\n", novoUsuario.login);
-        printf("\tpressione ENTER para voltar...\n");
-        getchar();
+        printf("\n");
+        printf("\t   Usuario @%s cadastrado com sucesso!\n", novoUsuario.login);
+        mostrarPressioneEnter();
 
         return TELA_LOGIN;
     }
@@ -279,6 +406,7 @@
 
     int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
         Usuario novoAmigo;
+        Solicitacoes inutil; // variavel desnecessaria para a função.... 
 
         mostrarTitulo("ENVIAR SOLICITACAO DE AMIZADE");
 
@@ -300,7 +428,7 @@
             printf("\n");
             printf("\t   Não encontramos o usuário @%s no sistema.\n", novoAmigo.login);
         } else {
-            sol_addSolicitacao(novoAmigo.id, user->id , 15);
+            sol_addSolicitacao(&inutil, novoAmigo.id, user->id , 15);
             printf("\n");
             printf("\t   Solicitação enviada com sucesso!\n");
         }
@@ -324,7 +452,7 @@
         for(int i = 0; i < amigos->nroRelacionamento; i++){
             int id = amigos->amizades[i].id;
             if(strcmp(amigo.login, (*users)[id -1].login) == 0){
-                amigo.id = (*users)[i].id;
+                amigo.id = (*users)[id-1].id;
                 break;
             }
         }
