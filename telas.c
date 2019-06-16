@@ -83,8 +83,6 @@
             } while(opcao < '0' || opcao > '5');
 
             switch(opcao){
-                case '5':
-                    break;
                 
                 case '1':
                     carregarTelaListarAmigos(users, user, &dsh_amigosUsuario);
@@ -100,6 +98,10 @@
 
                 case '4':
                     carregarFormularioRemoverAmigo(users, user, &dsh_amigosUsuario);
+                    break;
+
+                case '5':
+                    carregarTelaParceiroIdeal(users, user, &dsh_rankUsuarios);
                     break;
             } 
         }
@@ -197,7 +199,47 @@
         return TELA_DASHBOARD;
     }
 
-    int carregarTelaParceiroIdeal(){
+    int carregarTelaParceiroIdeal(Usuario** users, Usuario* user, Rank *r){
+        Dados    userData, loveData;
+        RankItem loveItem;
+
+        /**
+         * Carregando os seus dados e preparando as variáveis
+         */
+        loveItem.id = -1;
+        loveItem.pontuacao = 0;
+        dad_buscaDados(&userData, user->id);
+        
+        for(int i = 0; i < r->qtdItens; i++){
+            if(r->usuarios[i].id == user->id)
+                continue;
+            if(r->usuarios[i].pontuacao <= LIMIAR_PONTUACAO)
+                break;
+
+            dad_buscaDados(&loveData, r->usuarios[i].id);
+
+            // caso B namore ou suas opções/genero nao sejam compativeis
+            if(loveData.namorando == 's' || !dad_possuiInteresse(&userData, &loveData))
+                continue;
+
+            // Achou o melhor candidato
+            loveItem.id = r->usuarios[i].id;
+            loveItem.pontuacao = r->usuarios[i].pontuacao;
+            break;
+        }
+
+        mostrarTitulo("LOVE FINDER - ENCONTRE SEU PARCEIRO IDEAL");
+        
+        if(loveItem.id <= 0){
+            printf("\t   Ainda não há no sistema uma pessoa ideal para voce :(\n");
+        } else {
+            printf("\t   @%-30s %s(%-3d pontos de afinidade)%s\n\n", (*users)[loveItem.id-1].login, CVERDE, loveItem.pontuacao , RESET);
+            printf("\t   Nome: %s.\n\n", loveData.nome);
+            printf("\t   Idade: %d anos.\n\n", loveData.idade);
+        }
+            
+        mostrarPressioneEnter();
+
         return TELA_DASHBOARD;
     }
 

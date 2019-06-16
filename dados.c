@@ -32,3 +32,32 @@ int dad_buscaDados (Dados* dados, int id){
 	return 0;
 }
 
+// Retorna se A se interessa por B e vice-versa
+	int dad_possuiInteresse(Dados* a, Dados* b){
+		switch (a->orientacao){
+			case 'e': // Hetero
+				if(a->genero != b->genero && b->orientacao != 'o')
+					return 1;
+				else 
+					return 0;
+				break;
+
+			case 'o': // Homossexual
+				if(a->genero == b->genero && b->orientacao != 'e')
+					return 1;
+				else 
+					return 0;
+				break;
+
+			case 'b': // Bissexual
+				if(a->genero == b->genero && b->orientacao != 'e')
+					return 1;
+				else if(a->genero != b->genero && b->orientacao != 'o')
+					return 1;
+				else
+					return 0;
+				break;
+
+		}
+	
+	}

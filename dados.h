@@ -25,4 +25,7 @@ int dad_escreverDados (Dados* dados);
 */
 int dad_buscaDados (Dados* dados, int id);
 
+// Retorna se A se interessa por B e vice-versa
+int dad_possuiInteresse(Dados* a, Dados* b);
+
 #endif
