@@ -20,9 +20,9 @@ int sol_escreverSolicitacoes(Solicitacoes* sol, int id);
 
 int sol_lerSolicitacoes(Solicitacoes* sol, int id);
 
-int sol_addSolicitacao (int id, int idAmigo, int pontosAmigo);
+int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo);
 
-int sol_excluirSolicitacao (int id, int idAmigo);
+int sol_excluirSolicitacao (Solicitacoes* sol, int id, int idAmigo);
 
 /* heapsort ====================================================================== */
 

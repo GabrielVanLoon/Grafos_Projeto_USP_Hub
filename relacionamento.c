@@ -6,6 +6,8 @@ const int tamanhoRelacionamento = sizeof(Relacionamento);
 /* heapsort ====================================================================== */
 int maiorId(Relacionamento* heap, int indexA, int indexB);
 
+int maiorIdB(Relacionamento* heap, int indexA, int indexB);
+
 int maiorPontos(Relacionamento* heap, int indexA, int indexB);
 
 void trocar(Relacionamento* heap, int indexA, int indexB);
@@ -58,7 +60,6 @@ int rel_lerRelacionamentos(Relacionamento* rel, int id){
 int rel_addAmizade (Relacionamento* rel, int id, int idAmigo, int pontosAmigo){
 
 	if(rel_lerRelacionamentos(rel, id)) return 1;
-
 	if(rel->nroRelacionamento >= 99) return 2;
 	rel->amizades[rel->nroRelacionamento].id = idAmigo;
 	rel->amizades[rel->nroRelacionamento].pontos = pontosAmigo;
@@ -81,16 +82,15 @@ int rel_removeAmizade (Relacionamento* rel, int id, int idAmigo){
 	
 	heapsort_relacionamento(rel, maiorId); //heapsort_relacionamento pelo id
 
-	if(pos = busca_binaria_indice(rel, maiorId, idAmigo), pos != -1) { //remove
-		rel->amizades[pos].id = 0;
-		rel->amizades[pos].pontos = 0;
+	if(pos = busca_binaria_indice(rel, maiorIdB, idAmigo), pos != -1) //remove
+	{
+		rel->amizades[pos].pontos = -1;
 		heapsort_relacionamento(rel, maiorPontos); // heapsort_relacionamento pelos pontos
 		rel->nroRelacionamento--;
 	} else {
 		heapsort_relacionamento(rel, maiorPontos); // heapsort_relacionamento pelos pontos
 	}
-
-
+	
 	if(rel_escreverRelacionamento(rel, id)) return 1; // reescrita
 	return 0;
 }
@@ -101,8 +101,15 @@ int maiorId(Relacionamento* heap, int indexA, int indexB) {
     return (heap->amizades[indexA].id > heap->amizades[indexB].id)? indexA : indexB;
 }
 
+int maiorIdB(Relacionamento* heap, int indexA, int indexB) {
+     if(heap->amizades[indexA].id < indexB) return 1;
+	 else if(heap->amizades[indexA].id > indexB) return -1;
+	 return 0;
+	 
+}
+
 int maiorPontos(Relacionamento* heap, int indexA, int indexB) {
-    return (heap->amizades[indexA].pontos > heap->amizades[indexB].pontos)? indexA : indexB;
+    return (heap->amizades[indexA].pontos < heap->amizades[indexB].pontos)? indexA : indexB;
 }
 
 void trocar(Relacionamento* heap, int indexA, int indexB) 
@@ -123,9 +130,9 @@ void construir_heap(Relacionamento* heap, int(*ordenar)(Relacionamento*, int, in
     int esq = (2*i) + 1;
     int dir = (2*i) + 2;
 
-    if(esq < n && ordenar(heap, esq, maior) > esq) maior = esq;
+    if(esq < n && ordenar(heap, esq, maior) == esq) maior = esq;
     
-    if(dir < n && ordenar(heap, dir, maior) > dir) maior = dir;
+    if(dir < n && ordenar(heap, dir, maior) == dir) maior = dir;
      
     if(maior != i) {
         trocar(heap, i, maior); 
@@ -165,8 +172,8 @@ int busca_binaria_indice(Relacionamento* relacionamento, int(*ordenar)(Relaciona
     while(inicio <= fim) {
         meio = (inicio + fim) / 2;
         int u = ordenar(relacionamento, meio, valor);
-        if(u == meio) return meio; 
-        else if(u < valor) inicio = meio + 1;
+        if(u == 0) return meio; 
+        else if(u == 1) inicio = meio + 1;
         else fim = meio - 1;
     }
     return -1;

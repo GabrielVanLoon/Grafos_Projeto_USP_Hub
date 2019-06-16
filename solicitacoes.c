@@ -2,6 +2,8 @@
 
 const char arquivoSolicitacoes[] = "binarios/solicitacoes.bin";
 
+int maiorIdBSolicitado(Solicitacoes* heap, int indexA, int indexB);
+
 void trocar_sol(Solicitacoes* heap, int indexA, int indexB);
 
 void construir_heap_sol(Solicitacoes* heap, int (*ordenar)(Solicitacoes*, int, int), int n, int i);
@@ -46,19 +48,16 @@ int sol_lerSolicitacoes(Solicitacoes* sol, int id){
 *@return 1: Erro de abertura de arquivo
 *@return 2: Numero máximo de amigos excedido
 **/
-int sol_addSolicitacao (int id, int idAmigo, int pontosAmigo){
-	Solicitacoes sol;
-	
-	if(sol_lerSolicitacoes(&sol, id)) return 1;
-	if(sol.nroSolicitacoes >= 99) return 2;
-
-	sol.pendencias[sol.nroSolicitacoes].id = idAmigo;
-	sol.pendencias[sol.nroSolicitacoes].pontos = pontosAmigo;
-	sol.nroSolicitacoes += 1;
-
+int sol_addSolicitacao (Solicitacoes* sol, int id, int idAmigo, int pontosAmigo){
+	if(sol_lerSolicitacoes(sol, id)) return 1;
+//	printf("num %d", sol->nroSolicitacoes);
+	if(sol->nroSolicitacoes >= 99) return 2;
+	sol->pendencias[sol->nroSolicitacoes].id = idAmigo;
+	sol->pendencias[sol->nroSolicitacoes].pontos = pontosAmigo;
+	sol->nroSolicitacoes++;
 	// heapsort_solicitacoes pelos pontos
-	heapsort_solicitacoes(&sol, maiorPontosSolicitado);
-	if(sol_escreverSolicitacoes(&sol, id)) return 1;
+	heapsort_solicitacoes(sol, maiorPontosSolicitado);
+	if(sol_escreverSolicitacoes(sol, id)) return 1;
 	return 0;
 }
 
@@ -68,24 +67,23 @@ int sol_addSolicitacao (int id, int idAmigo, int pontosAmigo){
 *@return 1: Erro de abertura de arquivo
 *@return 2: Nao ha amigos
 **/
-int sol_excluirSolicitacao ( int id, int idAmigo){
-	Solicitacoes sol;
-	
-	if(sol_lerSolicitacoes(&sol, id)) return 1;
-	if(sol.nroSolicitacoes <= 0) return 2;
+int sol_excluirSolicitacao (Solicitacoes* sol, int id, int idAmigo){
+	if(sol_lerSolicitacoes(sol, id)) return 1;
+	if(sol->nroSolicitacoes <= 0) return 2;
 	int pos;
 	
-	heapsort_solicitacoes(&sol, maiorIdSolicitado); //heapsort_solicitacoes pelo id
+	heapsort_solicitacoes(sol, maiorIdSolicitado); //heapsort_solicitacoes pelo id
 
-	if(pos = busca_binaria_solicitacoes(&sol, maiorIdSolicitado, idAmigo), pos != -1) //remove
+	if(pos = busca_binaria_solicitacoes(sol, maiorIdBSolicitado, idAmigo), pos != -1) //remove
 	{
-		sol.pendencias[pos].id = 0;
-		sol.pendencias[pos].pontos = 0;
+		sol->pendencias[pos].pontos = -1;
+		heapsort_solicitacoes(sol, maiorPontosSolicitado); // heapsort_solicitacoes pelos pontos
+		sol->nroSolicitacoes--;
+	} else {
+		heapsort_solicitacoes(sol, maiorPontosSolicitado); // heapsort_solicitacoes pelos pontos
 	}
-	heapsort_solicitacoes(&sol, maiorPontosSolicitado); // heapsort_solicitacoes pelos pontos
-	sol.nroSolicitacoes--;
 
-	if(sol_escreverSolicitacoes(&sol, id)) return 1; // reescrita
+	if(sol_escreverSolicitacoes(sol, id)) return 1; // reescrita
 	return 0;
 }
 
@@ -96,7 +94,14 @@ int maiorIdSolicitado(Solicitacoes* heap, int indexA, int indexB) {
 }
 
 int maiorPontosSolicitado(Solicitacoes* heap, int indexA, int indexB) {
-    return (heap->pendencias[indexA].pontos > heap->pendencias[indexB].pontos)? indexA : indexB;
+    return (heap->pendencias[indexA].pontos < heap->pendencias[indexB].pontos)? indexA : indexB;
+}
+
+int maiorIdBSolicitado(Solicitacoes* heap, int indexA, int indexB) {
+     if(heap->pendencias[indexA].id < indexB) return 1;
+	 else if(heap->pendencias[indexA].id > indexB) return -1;
+	 return 0;
+	 
 }
 
 void trocar_sol(Solicitacoes* heap, int indexA, int indexB) {
@@ -154,11 +159,11 @@ void print_heap_solicitacoes(Solicitacoes* heap) {
 int busca_binaria_solicitacoes(Solicitacoes* solicitacoes, int(*ordenar)(Solicitacoes*, int, int),  int valor) {
 	int inicio = 0, fim, meio;
     fim = solicitacoes->nroSolicitacoes;
-    while(inicio < fim) {
+    while(inicio <= fim) {
         meio = (inicio + fim) / 2;
         int u = ordenar(solicitacoes, meio, valor);
-        if(u == meio) return meio; 
-        else if(u < valor) inicio = meio + 1;
+        if(u == 0) return meio; 
+        else if(u == 1) inicio = meio + 1;
         else fim = meio - 1;
     }
     return -1;
