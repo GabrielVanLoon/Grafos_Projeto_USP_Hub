@@ -30,7 +30,7 @@ int grf_addUser(int cidades, int filme, int livros, int tribes, int musica);
 /* */
 int grf_comparaUser(int idA, int idB);
 
-int grf_calculaPontuacaoUser(int idA, int idB, int* pontos);
+int grf_calculaPontuacaoUser(User idA, User idB, int* pontos);
 
 int grf_dfs(Grafo* grafo, int id);
 

@@ -78,22 +78,7 @@ int grf_lerUser(User* user, int id) {
     return 0;
 }
 
-int grf_calculaPontuacao(int idA, int idB, int* pontos) {
-    User userA, userB;
-
-    grf_lerUser(&userA, idA);
-    grf_lerUser(&userB, idB);
-
-    *pontos = 0;
-    *pontos += (userA.cidade == userB.cidade);
-    *pontos += (userA.filme == userB.filme);
-    *pontos += (userA.tribes == userB.tribes);
-    *pontos += (userA.musica == userB.musica);
-
-    return 0;
-}
-
-int grf_calculaPontuacaoUser(User idA, int idB, int* pontos) {
+int grf_calculaPontuacaoUser(User idA, User idB, int* pontos) {
     *pontos = 0;
     *pontos += (userA.cidade == userB.cidade);
     *pontos += (userA.filme == userB.filme);
@@ -114,7 +99,7 @@ int grf_dfs(Grafo* grafo, int id) {
     fread(matriz, sizeof(User), grafo->nroUsers, fp);
     
     for(int i = 0; i < grafo->nroUsers; ++i) {
-        grf_calculaPontuacaoUser(&matriz[i], id, &pontuacao[i]);
+        grf_calculaPontuacaoUser(&matriz[i], &matriz[id], &pontuacao[i]);
     }
 
     grafo->pontuacao = pontuacao;
