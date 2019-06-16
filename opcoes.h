@@ -2,7 +2,7 @@
     #define  OPCOES_GRAFO_H
 
     /**
-     * Mapeia de maneira fixa o id de cada opção possível do usuário.
+     * Mapeia de maneira fixa o id de cada opção de escolha
      */
 
     typedef enum _musica { 

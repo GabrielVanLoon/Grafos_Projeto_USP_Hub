@@ -2,6 +2,15 @@
     #define TELAS_H
 
     /**
+     * Essa classe funciona como um controlador. que delega quais as informações
+     * serão exibidas na tela do usuário e também faz as chamadas às funções implementadas
+     * nas outras bibliotecas.
+     * 
+     * Obs.: As configurações foram feitas para um terminal Linux comum. seu comportamento
+     *       em um terminal windows não são foram testados. 
+     */
+
+    /**
      * INCLUDES NECESSÁRIOS
      */
     #include "usuarios.h"
