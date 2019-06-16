@@ -78,12 +78,12 @@ int grf_lerUser(User* user, int id) {
     return 0;
 }
 
-int grf_calculaPontuacaoUser(User idA, User idB, int* pontos) {
+int grf_calculaPontuacaoUser(User* idA, User* idB, int* pontos) {
     *pontos = 0;
-    *pontos += (userA.cidade == userB.cidade);
-    *pontos += (userA.filme == userB.filme);
-    *pontos += (userA.tribes == userB.tribes);
-    *pontos += (userA.musica == userB.musica);
+    *pontos += (userA->cidade == userB->cidade);
+    *pontos += (userA->filme == userB->filme);
+    *pontos += (userA->tribes == userB->tribes);
+    *pontos += (userA->musica == userB->musica);
 
     return 0;
 }
