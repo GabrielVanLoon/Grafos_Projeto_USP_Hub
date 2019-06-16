@@ -6,7 +6,6 @@
 */
 #ifndef GRAFO_H
 #define GRAFO_H
-#define maximoUsers 100000
 
 typedef struct user_ {
     int id, 
@@ -18,15 +17,21 @@ typedef struct user_ {
 }User;
 
 typedef struct grafo_ {
-    int id, 
-        nroUsers,
-        pontuacao[maximoUsers];
+    int id,
+    int nroUsers;
+    int* pontuacao;
 }Grafo;
 
+/*
+    Adiciona no grafo um usuario.
+*/
 int grf_addUser(int cidades, int filme, int livros, int tribes, int musica);
 
+/* */
 int grf_comparaUser(int idA, int idB);
 
-int grf_calculaPontuacao(int idA, int idB, int* pontos);
+int grf_calculaPontuacaoUser(int idA, int idB, int* pontos);
+
+int grf_dfs(Grafo* grafo, int id);
 
 #endif
