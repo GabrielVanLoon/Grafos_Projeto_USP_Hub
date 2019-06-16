@@ -17,6 +17,16 @@
     #define SAIR_PROGRAMA   400
 
     /**
+     * CORES UTILIZADAS PELO PROGRAMA
+     */
+    #define RESET       "\033[0m"
+    #define CVERMELHO   "\033[1;31m"
+    #define CVERDE      "\033[1;32m"
+    #define CAZUL       "\033[1;34m"
+    #define CCIANO      "\033[1;36m"
+    #define CROSA    "\033[1;35m"
+
+    /**
      * TELAS DO SISTEMA
      */
         /**
@@ -60,4 +70,13 @@
 
         int carregarFormularioRemoverAmigo();
 
+    /** FUNÇÕES UTILITÁRIAS
+     */
+        void mostrarTitulo(char* nomeTela);
+
+        void mostrarOpcao(char num, char* desc);
+
+        void mostrarOpcaoSair(char* desc);
+
+        void mostrarPressioneEnter();
 #endif

@@ -105,9 +105,10 @@ void usr_listarUsuarios(UsuariosHeader* usersHeaders, Usuario** users){
     if(usersHeaders == NULL || users == NULL)
         return;
 
-    printf("\tQuantidade de usuários: %d.\n", usersHeaders->qtdUsuarios);
+    printf("\t   Quantidade de usuários: %d\n", usersHeaders->qtdUsuarios);
+    printf("\n");
     for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
-        printf("\tUsuário nº %d\tLogin: '%s'\n", (*users)[i].id, (*users)[i].login);
+        printf("\t   Usuário nº%d\tLogin: @%s\n\n", (*users)[i].id, (*users)[i].login);
     }
-    getchar();
+    printf("\n");
 }

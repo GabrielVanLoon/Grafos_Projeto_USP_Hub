@@ -10,13 +10,14 @@
     int carregarTelaLogin(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
         char opcao = 0;
         do {
-            system("clear");
-            printf("\n\t***** REDE SOCIAL - AMIZADE VERDADEIRA\n\n");
-            printf("\t1 - Fazer Login\n");
-            printf("\t2 - Crie uma conta!\n");
-            printf("\t3 - Mostrar logins\n");
-            printf("\t0 - Sair\n");
-            printf("\n\tSelecione a Opção: ");
+            
+            mostrarTitulo("FAZER LOGIN");
+            mostrarOpcao('1', "Fazer login");
+            mostrarOpcao('2', "Criar uma conta!");
+            mostrarOpcao('3', "Mostrar usuários cadastrados");
+            mostrarOpcaoSair("Sair");
+
+            printf("\t   Selecione a Opção: ");
             fflush(stdout);
 
             scanf(" %c", &opcao); getchar();
@@ -31,8 +32,9 @@
             return carregarFormularioCadastro(usersHeaders, users);
 
         } else if(opcao == '3'){
-            printf("\n\n\t***** REDE SOCIAL - LISTA DE LOGINS\n\n");
+            mostrarTitulo("LISTA DE USUARIOS CADASTRADOS");
             usr_listarUsuarios(usersHeaders, users);
+            mostrarPressioneEnter();
         
         } else if(opcao == '0'){
             return SAIR_PROGRAMA;
@@ -60,16 +62,17 @@
 
         // Exibe as principais opções do painel
         while(opcao != '0'){
-            do {
-                system("clear");
-                printf("\n\t***** REDE SOCIAL - DASHBOARD\n\n");
-                printf("\t1 - Ver lista de amizades\n");
-                printf("\t2 - Ver sugestões de amizades\n");
-                printf("\t3 - Enviar solicitação de amizade\n");
-                printf("\t4 - Excluir amizade\n");
-                printf("\t5 - Encontrar parceiro(a) ideal\n");
-                printf("\t0 - Sair\n");
-                printf("\n\tSelecione a Opção: ");
+            do {   
+
+                mostrarTitulo("DASHBOARD DO USUARIO");
+                mostrarOpcao('1', "Ver lista de amigos");
+                mostrarOpcao('2', "Ver sugestões de amizades");
+                mostrarOpcao('3', "Enviar solicitação de amizade");
+                mostrarOpcao('4', "Excluir amizade");
+                mostrarOpcao('5', "Encontrar parceiro(a) ideal");
+                mostrarOpcaoSair("Sair");
+
+                printf("\t   Selecione a Opção: ");
                 fflush(stdout);
 
                 scanf(" %c", &opcao); 
@@ -109,11 +112,13 @@
             
             int id = solicitacoes->pendencias[i].id;
 
-            system("clear");
-            printf("\n\t***** REDE SOCIAL - PEDIDO DE AMIZADE\n\n");
-            printf("\n\tO usuário @%s te enviou uma solicitação de amizade!\n", (*users)[id-1].login);
-            printf("\tVocês possuem %d pontos de afinidade.\n", solicitacoes->pendencias[i].pontos);
-            printf("\tDeseja aceitar? (s/n): ");
+            mostrarTitulo("NOVA SOLICITACAO DE AMIZADE");
+
+            printf("\n");
+            printf("\t   O usuário @%s te enviou uma solicitação de amizade!\n", (*users)[id-1].login);
+            printf("\t   Vocês possuem %s%d pontos de afinidade%s.\n", CVERDE, solicitacoes->pendencias[i].pontos, RESET);
+            printf("\n");
+            printf("\t   Deseja aceitar? (s/n): ");
             scanf(" %c%*c", &opt);
 
             if(opt == 's'){
@@ -121,13 +126,14 @@
                 aux2 = rel_addAmizade(&rel, solicitacoes->pendencias[i].id, user->id, solicitacoes->pendencias[i].pontos);
 
                 if(aux == 1 || aux == 2){
-                    printf("\n\tOcorreu um erro ao aceitar a solicitação.\n");
-                    printf("\n\tVerifique se você não alcançou o limite de amigos.\n");
+                    printf("\n");
+                    printf("\t   Ocorreu um erro ao aceitar a solicitação.\n");
+                    printf("\t   Verifique se você não alcançou o limite de amigos.\n");
                 } else {
-                    printf("\n\tUsuário adicionado com sucesso.\n");
+                    printf("\n");
+                    printf("\t   Usuário adicionado com sucesso.\n");
                 }
-                printf("\n\tpressione ENTER para continuar...\n");
-                getchar();
+                mostrarPressioneEnter();
             }
 
             // Exclui o cadastro da solicitação de amizade
@@ -139,21 +145,19 @@
 
     int carregarTelaListarAmigos(Usuario** users, Usuario* user, Relacionamento* amigos){
         
-        system("clear");
-        printf("\n\t***** REDE SOCIAL - LISTA DE AMIGOS\n");
-
+        mostrarTitulo("MINHA LISTA DE AMIGOS");
+        
         if(amigos->nroRelacionamento <= 0)
-            printf("\n\tVocê ainda não tem nenhum amigx =(\n");
+            printf("\t   Você ainda não tem nenhum amigx =(\n");
         else
-            printf("\n\tVocê possui %d amigos.\n\n", amigos->nroRelacionamento);
+            printf("\t   Você possui %d amigos.\n\n", amigos->nroRelacionamento);
 
         for(int i = 0; i < amigos->nroRelacionamento; i++){ 
             int id = amigos->amizades[i].id;
-            printf("\tnº %02d  -  @%-20s (%d pontos de afinidade)\n", i+1, (*users)[id-1].login, amigos->amizades[i].pontos);
+            printf("\t   @%-30s %s(%d pontos de afinidade)%s\n\n", (*users)[id-1].login, CVERDE, amigos->amizades[i].pontos, RESET);
         }
 
-        printf("\n\tpressione ENTER para continuar...\n");
-        getchar();
+        mostrarPressioneEnter();
 
         return TELA_DASHBOARD;
     }
@@ -251,10 +255,9 @@
         int  id;
         char login[60];
 
-        system("clear");
-        printf("\n\t***** REDE SOCIAL - CADASTRAR USUÁRIO\n\n");
+        mostrarTitulo("FORMULARIO DE LOGIN");
 
-        printf("\n\tDigite seu login: ");
+        printf("\n\t   Digite seu login: @");
         scanf(" %59[^\r\n]", login);
         getchar();
 
@@ -265,20 +268,22 @@
             (*user) = (*users)[id];
             return TELA_DASHBOARD;
         }
-
-        printf("\n\tLogin '%s' não cadastrado no sistema. Verifique se digitou corretamente!\n", login);
-        printf("\tpressione ENTER para voltar...\n");
-        getchar();
+        
+        printf("\n");
+        printf("\t   Login @%s não cadastrado no sistema. Verifique se digitou tudo corretamente!\n", login);
+        mostrarPressioneEnter();
+        
         
         return TELA_LOGIN;
     }
 
     int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
         Usuario novoAmigo;
-       
-        system("clear");
-        printf("\n\t***** REDE SOCIAL - ADICIONAR AMIGO\n\n");
-        printf("\n\tInsira o login de quem deseja adicionar: @");
+
+        mostrarTitulo("ENVIAR SOLICITACAO DE AMIZADE");
+
+        printf("\n");
+        printf("\t   Insira o login de quem deseja adicionar: @");
         scanf("%60s%*c", novoAmigo.login);
         
         // Buscando o amigo
@@ -292,27 +297,26 @@
 
         // Caso o login não exista
         if(novoAmigo.id == -1){
-            printf("\n\tNão encontramos o usuário @%s no sistema.\n", novoAmigo.login);
-            printf("\tpressione ENTER para voltar...\n");
-            getchar();
+            printf("\n");
+            printf("\t   Não encontramos o usuário @%s no sistema.\n", novoAmigo.login);
         } else {
-
             sol_addSolicitacao(novoAmigo.id, user->id , 15);
-            printf("\n\tSolicitação enviada com sucesso!\n");
-            printf("\tpressione ENTER para voltar...\n");
-            getchar();
-
+            printf("\n");
+            printf("\t   Solicitação enviada com sucesso!\n");
         }
         
+        mostrarPressioneEnter();
+
         return TELA_DASHBOARD;
     }
 
     int carregarFormularioRemoverAmigo(Usuario** users, Usuario* user, Relacionamento* amigos){
         Usuario amigo;
-       
-        system("clear");
-        printf("\n\t***** REDE SOCIAL - REMOVER AMIGO\n\n");
-        printf("\n\tInsira o login de quem deseja remover: @");
+
+        mostrarTitulo("REMOVER AMIZADE");
+
+        printf("\n");
+        printf("\t   Insira o login de quem deseja remover: @");
         scanf("%60s%*c", amigo.login);
         
         // Buscando o amigo
@@ -327,20 +331,73 @@
 
         // Caso o login não exista
         if(amigo.id == -1){
-            printf("\n\tNão encontramos o usuário @%s na sua lista de amizes.\n", amigo.login);
-            printf("\tpressione ENTER para voltar...\n");
-            getchar();
+            printf("\n");
+            printf("\t   Não encontramos o usuário @%s na sua lista de amizades.\n", amigo.login);
         } else {
 
             rel_removeAmizade(amigos, user->id, amigo.id);
             rel_removeAmizade(amigos, amigo.id, user->id);
             rel_lerRelacionamentos(amigos, user->id); // Carregando os amigos atualizado
 
-            printf("\n\tRemoção feita com sucesso!\n");
-            printf("\tpressione ENTER para voltar...\n");
-            getchar();
-
+            printf("\n");
+            printf("\t   Remoção feita com sucesso!\n");
         }
         
+        mostrarPressioneEnter();
+
         return TELA_DASHBOARD;
     }
+
+/** FUNÇÕES UTILITÁRIAS
+ */
+    void mostrarTitulo(char* nomeTela){
+        
+        /**
+         * Calculando o local para inserir o nome da tela corretamente
+         */
+        int  inicioNome, nomeLen, total = 84;
+        char nomeTelaAjustado[90] = "";
+        nomeLen    = strlen(nomeTela);
+        inicioNome = 41 - (nomeLen/2);
+        for(int i = 1; i <= total; i++){
+            if(i == inicioNome){
+                strcat(nomeTelaAjustado, nomeTela);
+                i += nomeLen;
+            } else {
+                strcat(nomeTelaAjustado, " ");
+            }
+        }
+
+        system("clear");
+
+        printf("\n");
+        printf("\t%s#     #  #####  ######     #     # #     # ###### %s    #       ####### ######     #    \n", CVERDE, RESET);
+        printf("\t%s#     # #     # #     #    #     # #     # #     #%s    #          #    #     #   # #   \n", CVERDE, RESET);
+        printf("\t%s#     # #       #     #    #     # #     # #     #%s    #          #    #     #  #   #  \n", CVERDE, RESET);
+        printf("\t%s#     #  #####  ######     ####### #     # ###### %s    #          #    #     # #     # \n", CVERDE, RESET);
+        printf("\t%s#     #       # #          #     # #     # #     #%s    #          #    #     # ####### \n", CVERDE, RESET);
+        printf("\t%s#     # #     # #          #     # #     # #     #%s    #          #    #     # #     # \n", CVERDE, RESET);
+        printf("\t%s #####   #####  #          #     #  #####  ###### %s    #######    #    ######  #     # \n", CVERDE, RESET);
+        printf("\n");
+        printf("\t                                                        by Gabriel, Mathias e Albert\n");
+        printf("\n");
+        printf("\t+-----------------------------------------------------------------------------------+\n");
+        printf("\t|%s%s%s|\n", CVERDE, nomeTelaAjustado, RESET);
+        printf("\t+-----------------------------------------------------------------------------------+\n");
+        printf("\n");
+    
+    }
+
+    void mostrarOpcao(char num, char* desc){
+        printf("\t   %s[%c]%s %s\n\n", CVERDE, num, RESET, desc);
+    }
+    
+    void mostrarOpcaoSair(char* desc){
+        printf("\t   %s[0]%s %s\n\n", CVERMELHO, RESET, desc);
+    }
+
+    void mostrarPressioneEnter(){
+        printf("\t   %spressione ENTER para voltar...%s\n", CVERDE, RESET);
+        getchar();
+    }
+
