@@ -3,7 +3,7 @@ build:
 	rm *.o
 
 all:
-	gcc -o exec usuarios.c dados.c relacionamento.c solicitacoes.c telas.c main.c
+	gcc -o exec usuarios.c dados.c relacionamento.c solicitacoes.c grafo.c opcoes.h telas.c main.c
 
 run:
 	./exec
@@ -19,3 +19,6 @@ relacionamento:
 
 solicitacoes:
 	hexdump -Cv binarios/solicitacoes.bin
+
+grafo:
+	hexdump -Cv binarios/grafo.bin

@@ -1,6 +1,7 @@
 #include "telas.h"
 #include "relacionamento.h"
 #include "solicitacoes.h"
+#include "grafo.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -56,9 +57,11 @@
 
         // Carregando as variáveis que serão manipuladas à nivel de dashboard
         Relacionamento dsh_amigosUsuario;           
-        // ?????          dsh_pontosAfinidade;
+        Rank           dsh_rankUsuarios;  // Afinidade de todos os usuários com o atual
 
         rel_lerRelacionamentos(&dsh_amigosUsuario, user->id);
+        dsh_rankUsuarios = grf_carregarRank(user->id);
+
 
         // Exibe as principais opções do painel
         while(opcao != '0'){
@@ -80,16 +83,19 @@
             } while(opcao < '0' || opcao > '5');
 
             switch(opcao){
-                case '2':
                 case '5':
                     break;
                 
                 case '1':
                     carregarTelaListarAmigos(users, user, &dsh_amigosUsuario);
                     break;
-                    
+                
+                case '2':
+                    carregarTelaSugestoesAmizades(users, user, &dsh_rankUsuarios);
+                    break;
+
                 case '3':
-                    carregarFormularioAdicionarAmigo(usersHeaders, users, user);
+                    carregarFormularioAdicionarAmigo(usersHeaders, users, user, &dsh_rankUsuarios);
                     break;
 
                 case '4':
@@ -99,7 +105,8 @@
         }
 
         // Desaloca da memórias as variáveis à nível de dashboard
-            
+        grf_destruirRank(&dsh_rankUsuarios);
+
         return TELA_LOGIN; // todo
     }
 
@@ -116,7 +123,10 @@
 
             printf("\n");
             printf("\t   O usuário @%s te enviou uma solicitação de amizade!\n", (*users)[id-1].login);
-            printf("\t   Vocês possuem %s%d pontos de afinidade%s.\n", CVERDE, solicitacoes->pendencias[i].pontos, RESET);
+            if(solicitacoes->pendencias[i].pontos <= LIMIAR_PONTUACAO)
+                printf("\t   Vocês possuem %s%d pontos de afinidade%s.\n", CVERMELHO, solicitacoes->pendencias[i].pontos, RESET);
+            else
+                printf("\t   Vocês possuem %s%d pontos de afinidade%s.\n", CVERDE, solicitacoes->pendencias[i].pontos, RESET);
             printf("\n");
             printf("\t   Deseja aceitar? (s/n): ");
             scanf(" %c%*c", &opt);
@@ -155,7 +165,10 @@
 
         for(int i = 0; i < amigos->nroRelacionamento; i++){ 
             int id = amigos->amizades[i].id;
-            printf("\t   @%-30s %s(%d pontos de afinidade)%s\n\n", (*users)[id-1].login, CVERDE, amigos->amizades[i].pontos, RESET);
+            if(amigos->amizades[i].pontos <= LIMIAR_PONTUACAO)
+                printf("\t   @%-30s %s(%d pontos de afinidade)%s\n\n", (*users)[id-1].login, CVERMELHO, amigos->amizades[i].pontos, RESET);
+            else 
+                printf("\t   @%-30s %s(%d pontos de afinidade)%s\n\n", (*users)[id-1].login, CVERDE, amigos->amizades[i].pontos, RESET);
         }
 
         mostrarPressioneEnter();
@@ -163,7 +176,24 @@
         return TELA_DASHBOARD;
     }
 
-    int carregarTelaSugestoesAmizades(){
+    int carregarTelaSugestoesAmizades(Usuario** users, Usuario* user, Rank *r){
+
+        mostrarTitulo("RANK DE PESSOAS COM MAIOR AFINIDADE COM SEU PERFIL");
+        
+        if(r->qtdItens <= 0)
+            printf("\t   Você é o nosso único usuário :(\n");
+
+        for(int i = 0; i < r->qtdItens && i < 20; i++){
+            if(r->usuarios[i].id == user->id)
+                continue;
+            if(r->usuarios[i].pontuacao <= LIMIAR_PONTUACAO)
+                printf("\t   @%-30s %s(%-3d pontos de afinidade)%s\n\n", (*users)[r->usuarios[i].id-1].login, CVERMELHO, r->usuarios[i].pontuacao, RESET);
+            else 
+                printf("\t   @%-30s %s(%-3d pontos de afinidade)%s\n\n", (*users)[r->usuarios[i].id-1].login, CVERDE, r->usuarios[i].pontuacao, RESET);
+        }
+
+        mostrarPressioneEnter();
+
         return TELA_DASHBOARD;
     }
 
@@ -311,12 +341,12 @@
         do {
             mostrarTitulo("CRIAR CADASTRO - VOCE PERTENCE A ALGUMA TRIBO?");
 
-            mostrarOpcao('a', "NerdGeek");
+            mostrarOpcao('a', "Nerd ou Geek");
             mostrarOpcao('b', "Hippie");
-            mostrarOpcao('c', "Gotico");
+            mostrarOpcao('c', "Gótico");
             mostrarOpcao('d', "Hipster");
-            mostrarOpcao('e', "Kpoper");
-            mostrarOpcao('f', "Otaku");
+            mostrarOpcao('e', "Cultura Koreana (Kpoper)");
+            mostrarOpcao('f', "Cultura Japonesa (Otaku / Otome)");
             mostrarOpcao('g', "Fitness");
             mostrarOpcao('h', "Outro");
 
@@ -361,16 +391,21 @@
         idFilme = filme   - 'a' + 201;
         idLivro = livro   - 'a' + 301;
         idTribo = tribo   - 'a' + 401;
-
-        printf("\n\t   Valores recebidos: %d - %d - %d - %d - %d\n\n", idMusica, idCidade, idFilme, idLivro, idTribo);
+        // printf("\n\t   Valores recebidos: %d - %d - %d - %d - %d\n\n", idMusica, idCidade, idFilme, idLivro, idTribo);
 
         usr_inserirNovoUsuario(usersHeaders, users, &novoUsuario);
         dad_escreverDados(&dados);
         rel_novoUsuario();
         sol_novoUsuario();
+
+        int idNovoUsuario = usersHeaders->qtdUsuarios;
+        grf_inserirAresta(idNovoUsuario, idMusica, 1);
+        grf_inserirAresta(idNovoUsuario, idCidade, 0);
+        grf_inserirAresta(idNovoUsuario, idFilme,  0);
+        grf_inserirAresta(idNovoUsuario, idLivro,  0);
+        grf_inserirAresta(idNovoUsuario, idTribo,  0);
         
         // Mensagem final avisando que o usuário foi inserido com sucesso
-        
         printf("\n");
         printf("\t   Usuario @%s cadastrado com sucesso!\n", novoUsuario.login);
         mostrarPressioneEnter();
@@ -404,21 +439,24 @@
         return TELA_LOGIN;
     }
 
-    int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user){
-        Usuario novoAmigo;
+    int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user, Rank* r){
+        RankItem novoAmigo;
         Solicitacoes inutil; // variavel desnecessaria para a função.... 
+        char     loginAmigo[60];
 
         mostrarTitulo("ENVIAR SOLICITACAO DE AMIZADE");
 
         printf("\n");
         printf("\t   Insira o login de quem deseja adicionar: @");
-        scanf("%60s%*c", novoAmigo.login);
+        scanf("%59s%*c", loginAmigo);
         
-        // Buscando o amigo
+        // Buscando o amigo no rank de afinidades
         novoAmigo.id = -1;
-        for(int i = 0; i < usersHeaders->qtdUsuarios; i++){
-            if(strcmp(novoAmigo.login, (*users)[i].login) == 0){
-                novoAmigo.id = (*users)[i].id;
+        for(int i = 0; i < r->qtdItens; i++){
+            int id = r->usuarios[i].id;
+            if(strcmp(loginAmigo, (*users)[id-1].login) == 0){
+                novoAmigo.id        = r->usuarios[i].id;
+                novoAmigo.pontuacao = r->usuarios[i].pontuacao;
                 break;
             }
         }
@@ -426,9 +464,9 @@
         // Caso o login não exista
         if(novoAmigo.id == -1){
             printf("\n");
-            printf("\t   Não encontramos o usuário @%s no sistema.\n", novoAmigo.login);
+            printf("\t   Não encontramos o usuário @%s no sistema.\n", loginAmigo);
         } else {
-            sol_addSolicitacao(&inutil, novoAmigo.id, user->id , 15);
+            sol_addSolicitacao(&inutil, novoAmigo.id, user->id , novoAmigo.pontuacao);
             printf("\n");
             printf("\t   Solicitação enviada com sucesso!\n");
         }

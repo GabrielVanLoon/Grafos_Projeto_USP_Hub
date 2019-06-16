@@ -3,6 +3,7 @@
         "string.h": "c",
         "telas.h": "c",
         "stdio.h": "c",
-        "relacionamento.h": "c"
+        "relacionamento.h": "c",
+        "stdlib.h": "c"
     }
 }

@@ -8,6 +8,7 @@
     #include "dados.h"
     #include "relacionamento.h"
     #include "solicitacoes.h"
+    #include "grafo.h"
 
     /**
      * MAPEAMENTO DAS TELAS
@@ -52,7 +53,7 @@
         /**
          * Exibe a tela sugerindo as 20 pessoas com maior pontuação de afinidade.
          */
-        int carregarTelaSugestoesAmizades();
+        int carregarTelaSugestoesAmizades(Usuario** users, Usuario* user, Rank *r);
 
         /**
          * Exibe a pessoa com maior ponto de afinidade e que não está comprometida.
@@ -66,7 +67,7 @@
         
         int carregarFormularioLogin(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user);
 
-        int carregarFormularioAdicionarAmigo();
+        int carregarFormularioAdicionarAmigo(UsuariosHeader* usersHeaders, Usuario** users, Usuario* user, Rank* r);
 
         int carregarFormularioRemoverAmigo();
 
