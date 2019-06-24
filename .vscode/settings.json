@@ -4,6 +4,7 @@
         "telas.h": "c",
         "stdio.h": "c",
         "relacionamento.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "inserirLotes.C": "cpp"
     }
 }
